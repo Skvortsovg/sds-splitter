@@ -1,0 +1,119 @@
+{
+  "id": "a1003f59-1df1-1e71-ad27-dbfa1ddab2fa",
+  "name": "Splitter",
+  "description": "Splits data into three parts.",
+  "fullDescription": "Splitter takes one dataframe and splits it into 3 parts: train set, validation set and test set. The last one can be empty.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUgNkg3LjVWOUgxLjVWNlpNOSA5VjZIMTVWOUg5Wk0xNi41IDlIMjIuNVY2SDE2LjVWOVpNMCA0LjVIMS41SDIyLjVIMjRWNlY5VjEwLjVIMjIuNUgxLjVIMFY5VjZWNC41Wk05IDE1SDE1VjE4SDlWMTVaTTE2LjUgMThWMTVIMjIuNVYxOEgxNi41Wk03LjUgMTVIMS41VjE4SDcuNVYxNVpNMCAxMy41SDEuNUgyMi41SDI0VjE1VjE4VjE5LjVIMjIuNUgxLjVIMFYxOFYxNVYxMy41WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
+  "moduleType": "test",
+  "uiForm": {
+    "components": [
+      {
+        "parameter": ["train_size", "test_size", "remainder"],
+        "order": 1,
+        "label": "Partition sizes",
+        "type": "float",
+        "limits": { "min": 0.01, "max": 1 },
+        "uiComponent": "partitionSizer",
+        "total": null,
+        "defaultValue": [0.8, 0.2, 0.0],
+        "labelsValue": ["Train, qty.", "Test, qty.", "Validation, qty."],
+        "marks": {
+          "0": "0%",
+          "1": "100%"
+        },
+        "port": "df_src"
+      },
+      {
+        "parameter": "split_method",
+        "order": 2,
+        "label": "Split method",
+        "type": "string",
+        "uiComponent": "select",
+        "allowedValues": [
+          { "Random": "random" },
+          { "Random with stratification": "random_with_stratification" }
+        ],
+        "defaultValue": "random"
+      },
+      {
+        "parameter": "stratification_column",
+        "order": 3,
+        "label": "Field",
+        "type": "string",
+        "uiComponent": "dataframeColumns",
+        "detendensies": [
+          {
+            "parameter": "split_method",
+            "when": ["random"],
+            "effect": {
+              "hidden": true
+            }
+          }
+        ],
+        "placeholder": "Select field",
+        "defaultValue": null,
+        "port": "df_src"
+      },
+      {
+        "parameter": ["seed", "lock_seed"],
+        "order": 4,
+        "label": "Seed",
+        "type": "string",
+        "uiComponent": "seed",
+        "defaultValue": [null, true]
+      }
+    ]
+  },
+  "ports": [
+    {
+      "in": true,
+      "name": "df_src",
+      "label": "Input dataframe",
+      "description": "Input dataframe to split into parts",
+      "order": 1,
+      "type": "dataframe",
+      "shape": "shape_dataframe"
+    },
+    {
+      "in": false,
+      "name": "df_train",
+      "label": "Train dataframe",
+      "description": "Train set dataframe",
+      "order": 1,
+      "type": "dataframe",
+      "shape": "shape_dataframe",
+      "transformedFrom": "df_src"
+    },
+    {
+      "in": false,
+      "name": "df_val",
+      "label": "Validation dataframe",
+      "description": "Validation set dataframe",
+      "order": 3,
+      "type": "dataframe",
+      "shape": "shape_dataframe",
+      "transformedFrom": "df_src"
+    },
+    {
+      "in": false,
+      "name": "df_test",
+      "label": "Test dataframe",
+      "description": "Test set dataframe",
+      "order": 2,
+      "type": "dataframe",
+      "shape": "shape_dataframe",
+      "transformedFrom": "df_src"
+    }
+  ],
+  "shape": "other",
+  "script": {
+    "type": "python",
+    "deployType": "docker",
+    "runConfiguration": {
+      "sourceFiles": [
+        "source/splitter.py"
+      ],
+      "functionName": "splitter"
+    }
+  }
+}
